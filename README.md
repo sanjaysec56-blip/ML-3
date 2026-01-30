@@ -15,15 +15,79 @@ To write a program to predict the profit of a city using the linear regression m
 
 ## Program:
 ```
-/*
-Program to implement the linear regression using gradient descent.
-Developed by: 
-RegisterNumber:  
-*/
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# -----------------------
+# Data
+# -----------------------
+df = pd.read_csv('ex3.csv')
+x_raw = df['R&D Spend'].values
+y_raw = df['Profit'].values
+
+# Feature Scaling (Min-Max) to ensure convergence with Gradient Descent
+x = (x_raw - x_raw.min()) / (x_raw.max() - x_raw.min())
+y = (y_raw - y_raw.min()) / (y_raw.max() - y_raw.min())
+
+# -----------------------
+# Parameters
+# -----------------------
+w = 0.0
+b = 0.0
+alpha = 0.1
+epochs = 100
+n = len(x)
+
+losses = []
+
+# -----------------------
+# Gradient Descent
+# -----------------------
+for _ in range(epochs):
+    y_hat = w * x + b
+
+    # Mean Squared Error
+    loss = np.mean((y_hat - y) ** 2)
+    losses.append(loss)
+
+    dw = (2/n) * np.sum((y_hat - y) * x)
+    db = (2/n) * np.sum(y_hat - y)
+
+    w -= alpha * dw
+    b -= alpha * db
+
+# -----------------------
+# Plots
+# -----------------------
+plt.figure(figsize=(12, 5))
+
+# 1️⃣ Loss vs Iterations
+plt.subplot(1, 2, 1)
+plt.plot(losses, color="blue")
+plt.xlabel("R&D Spend")
+plt.ylabel("Profit")
+plt.title("R&D Spend VS Profit")
+
+# 2️⃣ Regression Line
+plt.subplot(1, 2, 2)
+plt.scatter(x, y, color="red", label="Data")
+plt.plot(x, w * x + b, color="green", label="Regression Line")
+plt.xlabel("R&D Spend (Scaled)")
+plt.ylabel("Profit (Scaled)")
+plt.title("Linear Regression Fit")
+plt.legend()
+plt.show()
+
+print("Final weight (w):", w)
+print("Final bias (b):", b)
+
 ```
 
 ## Output:
-![linear regression using gradient descent](sam.png)
+<img width="1253" height="631" alt="Screenshot 2026-01-30 115147" src="https://github.com/user-attachments/assets/5ea7fd91-6796-4b17-a003-34ab40c9dd01" />
+
 
 
 ## Result:
